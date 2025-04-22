@@ -1,2 +1,2 @@
 rm exe
-cc test.c minilibx_macos/libmlx.a -framework OpenGL -framework AppKit -DGL_SILENCE_DEPRECATION -o exe
+cc -Wall -Wextra -Werror -Iminilibx-linux -Lminilibx-linux test.c minilibx-linux/libmlx.a -lmlx -lXext -lX11 -lm -o exe

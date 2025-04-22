@@ -1,27 +1,15 @@
-#include "minilibx_macos/mlx.h"
-#include <stdlib.h>
-#include <unistd.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   test.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: scavalli <scavalli@student.42nice.fr>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/22 13:02:26 by scavalli          #+#    #+#             */
+/*   Updated: 2025/04/22 13:02:34 by scavalli         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-#define TILE_WIDTH 32
-#define TILE_HEIGHT 16
-#define MAP_WIDTH 3
-#define MAP_HEIGHT 3
-
-typedef struct s_data {
-	void	*mlx;
-	void	*win;
-	void	*img;
-	char	*addr;
-	int		bpp;
-	int		line_len;
-	int		endian;
-}	t_data;
-
-int map[MAP_HEIGHT][MAP_WIDTH] = {
-	{1, 1, 0},
-	{0, 1, 1},
-	{1, 0, 1}
-};
 
 void	put_pixel(t_data *data, int x, int y, int color)
 {
@@ -65,8 +53,8 @@ int	main(void)
 	t_data	data;
 
 	data.mlx = mlx_init();
-	data.win = mlx_new_window(data.mlx, 800, 600, "Vue isométrique");
-	data.img = mlx_new_image(data.mlx, 800, 600);
+	data.win = mlx_new_window(data.mlx, 1920, 1080, "Vue isométrique");
+	data.img = mlx_new_image(data.mlx, 1920, 1080);
 	data.addr = mlx_get_data_addr(data.img, &data.bpp, &data.line_len, &data.endian);
 
 	draw_map(&data);
