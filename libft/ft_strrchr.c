@@ -1,28 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_strrchr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: scavalli <scavalli@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/22 13:02:45 by scavalli          #+#    #+#             */
-/*   Updated: 2025/04/22 17:04:31 by scavalli         ###   ########.fr       */
+/*   Created: 2025/03/03 17:18:47 by scavalli          #+#    #+#             */
+/*   Updated: 2025/03/31 11:41:51 by scavalli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "header.h"
+#include "libft.h"
 
-
-
-int main(int argc, char **argv)
+char	*ft_strrchr(const char *s, int c)
 {
-	int	*map;
-	
-	if (argc != 2)
-		return (-1);
-	map = import_map(argv[1]);
-	if (map == NULL)
-		return (-1);
-	ft_fdf(map);
-	return (0);
+	int	i;
+
+	i = ft_strlen(s) - 1;
+	while (i >= 0)
+	{
+		if (s[i] == (unsigned char)c)
+			return ((char *)&s[i]);
+		i--;
+	}
+	if (c == '\0')
+		return ((char *)&s[ft_strlen(s)]);
+	return (NULL);
 }

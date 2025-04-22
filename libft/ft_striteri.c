@@ -1,28 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_striteri.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: scavalli <scavalli@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/22 13:02:45 by scavalli          #+#    #+#             */
-/*   Updated: 2025/04/22 17:04:31 by scavalli         ###   ########.fr       */
+/*   Created: 2025/03/03 17:12:39 by scavalli          #+#    #+#             */
+/*   Updated: 2025/03/17 18:33:48 by scavalli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "header.h"
+#include "libft.h"
 
-
-
-int main(int argc, char **argv)
+void	ft_striteri(char *s, void (*f)(unsigned int, char *))
 {
-	int	*map;
-	
-	if (argc != 2)
-		return (-1);
-	map = import_map(argv[1]);
-	if (map == NULL)
-		return (-1);
-	ft_fdf(map);
-	return (0);
+	unsigned int	i;
+
+	if (!s || !f)
+		return ;
+	i = 0;
+	while (s[i])
+	{
+		(*f)(i, &s[i]);
+		i++;
+	}
 }

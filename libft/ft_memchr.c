@@ -1,28 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_memchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: scavalli <scavalli@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/22 13:02:45 by scavalli          #+#    #+#             */
-/*   Updated: 2025/04/22 17:04:31 by scavalli         ###   ########.fr       */
+/*   Created: 2025/03/03 17:17:53 by scavalli          #+#    #+#             */
+/*   Updated: 2025/03/03 22:31:19 by scavalli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "header.h"
+#include "libft.h"
 
-
-
-int main(int argc, char **argv)
+void	*ft_memchr(const void *s, int c, size_t n)
 {
-	int	*map;
-	
-	if (argc != 2)
-		return (-1);
-	map = import_map(argv[1]);
-	if (map == NULL)
-		return (-1);
-	ft_fdf(map);
-	return (0);
+	const unsigned char	*str = (const unsigned char *)s;
+	size_t				i;
+
+	i = 0;
+	while (i < n)
+	{
+		if (str[i] == (unsigned char)c)
+			return ((void *)&str[i]);
+		i++;
+	}
+	return (NULL);
 }

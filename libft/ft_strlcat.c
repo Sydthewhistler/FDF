@@ -1,28 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_strlcat.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: scavalli <scavalli@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/22 13:02:45 by scavalli          #+#    #+#             */
-/*   Updated: 2025/04/22 17:04:31 by scavalli         ###   ########.fr       */
+/*   Created: 2025/03/03 17:18:31 by scavalli          #+#    #+#             */
+/*   Updated: 2025/03/03 22:32:28 by scavalli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "header.h"
+#include "libft.h"
 
-
-
-int main(int argc, char **argv)
+size_t	ft_strlcat(char *dst, const char *src, size_t size)
 {
-	int	*map;
-	
-	if (argc != 2)
-		return (-1);
-	map = import_map(argv[1]);
-	if (map == NULL)
-		return (-1);
-	ft_fdf(map);
-	return (0);
+	size_t	i;
+	size_t	j;
+	size_t	dst_len;
+
+	i = 0;
+	j = 0;
+	dst_len = 0;
+	while (dst[dst_len] && dst_len < size)
+	{
+		dst_len++;
+	}
+	if (dst_len == size)
+	{
+		return (size + ft_strlen(src));
+	}
+	i = dst_len;
+	while (src[j] && i < size - 1)
+	{
+		dst[i] = src[j];
+		i++;
+		j++;
+	}
+	dst[i] = '\0';
+	return (dst_len + ft_strlen(src));
 }

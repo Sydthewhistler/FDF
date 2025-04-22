@@ -1,28 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   FDF.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: scavalli <scavalli@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/22 13:02:45 by scavalli          #+#    #+#             */
-/*   Updated: 2025/04/22 17:04:31 by scavalli         ###   ########.fr       */
+/*   Created: 2025/04/22 17:04:55 by scavalli          #+#    #+#             */
+/*   Updated: 2025/04/22 17:18:32 by scavalli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 
-
-
-int main(int argc, char **argv)
+void	ft_fdf(int *map)
 {
-	int	*map;
+	t_data data;
+
+	data.mlx = mlx_init();
+	data.win = mlx_new_window(data.mlx, 1920, 1080, "FDF");
+	data.img = mlx_new_image(data.win, 1920, 1080);
+	data.addr = mlx_get_data_addr(data.img, &data.bpp, &data.line_len, &data.endian);
+
 	
-	if (argc != 2)
-		return (-1);
-	map = import_map(argv[1]);
-	if (map == NULL)
-		return (-1);
-	ft_fdf(map);
-	return (0);
+
+
 }

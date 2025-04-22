@@ -1,28 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_putstr_printf.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: scavalli <scavalli@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/22 13:02:45 by scavalli          #+#    #+#             */
-/*   Updated: 2025/04/22 17:04:31 by scavalli         ###   ########.fr       */
+/*   Created: 2025/03/05 12:49:51 by scavalli          #+#    #+#             */
+/*   Updated: 2025/04/22 14:30:05 by scavalli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "header.h"
+#include "ft_printf.h"
 
-
-
-int main(int argc, char **argv)
+void	ft_putstr_printf(char *str, int *len)
 {
-	int	*map;
-	
-	if (argc != 2)
-		return (-1);
-	map = import_map(argv[1]);
-	if (map == NULL)
-		return (-1);
-	ft_fdf(map);
-	return (0);
+	size_t	i;
+
+	i = 0;
+	if (str == NULL)
+	{
+		ft_putstr_printf("(null)", len);
+		return ;
+	}
+	while (str[i])
+	{
+		ft_putchar_printf(str[i], len);
+		i++;
+	}
+}
+
+void	ft_putchar_printf(char c, int *len)
+{
+	write(1, &c, 1);
+	(*len)++;
 }
