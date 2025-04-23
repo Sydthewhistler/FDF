@@ -6,13 +6,13 @@
 /*   By: scavalli <scavalli@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 14:29:43 by scavalli          #+#    #+#             */
-/*   Updated: 2025/04/22 14:12:23 by scavalli         ###   ########.fr       */
+/*   Updated: 2025/04/23 12:32:46 by scavalli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*ft_free(char *buffer, char *buf)
+static char	*ft_free(char *buffer, char *buf)
 {
 	char	*temp;
 

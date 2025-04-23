@@ -6,13 +6,27 @@
 /*   By: scavalli <scavalli@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 14:22:29 by scavalli          #+#    #+#             */
-/*   Updated: 2025/04/22 15:40:10 by scavalli         ###   ########.fr       */
+/*   Updated: 2025/04/23 16:12:05 by scavalli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static size_t	count_words(char const *s, char c)
+static bool is_charset(char c, char *charset)
+{
+	int	i;
+
+	i = 0;
+	while(charset[i])
+	{
+		if(charset[i] == c)
+			return (true); 
+		i++;
+	}
+	return (false);
+}
+
+static size_t	count_words(char const *s, char *charset)
 {
 	size_t	words;
 	size_t	i;
@@ -21,19 +35,19 @@ static size_t	count_words(char const *s, char c)
 	i = 0;
 	while (s[i])
 	{
-		if (s[i] != c && (s[i + 1] == c || s[i + 1] == '\0'))
+		if (!is_charset(s[i], charset) && (is_charset(s[i+ 1], charset) || s[i + 1] == '\0'))
 			words++;
 		i++;
 	}
 	return (words);
 }
 
-static void	fill_tab(char *new, char const *s, char c)
+static void	fill_tab(char *new, char const *s, char *charset)
 {
 	size_t	i;
 
 	i = 0;
-	while (s[i] && s[i] != c)
+	while (s[i] && !is_charset(s[i], charset))
 	{
 		new[i] = s[i];
 		i++;
@@ -41,7 +55,7 @@ static void	fill_tab(char *new, char const *s, char c)
 	new[i] = '\0';
 }
 
-static void	set_mem(char **tab, char const *s, char c)
+static void	set_mem(char **tab, char const *s, char *charset)
 {
 	size_t	count;
 	size_t	index;
@@ -52,14 +66,14 @@ static void	set_mem(char **tab, char const *s, char c)
 	while (s[index])
 	{
 		count = 0;
-		while (s[index + count] && s[index + count] != c)
+		while (s[index + count] && !is_charset(s[index + count], charset))
 			count++;
 		if (count > 0)
 		{
 			tab[i] = malloc(sizeof(char) * (count + 1));
 			if (!tab[i])
 				return ;
-			fill_tab(tab[i], (s + index), c);
+			fill_tab(tab[i], (s + index), charset);
 			i++;
 			index = index + count;
 		}
@@ -69,16 +83,15 @@ static void	set_mem(char **tab, char const *s, char c)
 	tab[i] = 0;
 }
 
-char	**ft_split(char *s, char c)
+char	**ft_split(char *s, char *charset)
 {
 	size_t	words;
 	char	**tab;
 
-	words = count_words(s, c);
+	words = count_words(s, charset);
 	tab = malloc(sizeof(char *) * (words + 1));
 	if (!tab)
 		return (NULL);
-	set_mem(tab, s, c);
-	free(s);
+	set_mem(tab, s, charset);
 	return (tab);
 }

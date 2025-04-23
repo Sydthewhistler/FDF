@@ -1,48 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: scavalli <scavalli@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/22 13:02:45 by scavalli          #+#    #+#             */
-/*   Updated: 2025/04/23 18:53:12 by scavalli         ###   ########.fr       */
+/*   Created: 2025/04/23 15:44:08 by scavalli          #+#    #+#             */
+/*   Updated: 2025/04/23 18:53:22 by scavalli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 
-
-
-int main(int argc, char **argv)
+void	ft_free_tab(char **str)
 {
-	t_map	*map;
-	
-	if (argc != 2)
-		return (-1);
-	map = import_map(argv[1]);
-	if (map == NULL)
+	int	i;
+
+	i = 0;
+	while(str[i])
 	{
-		printf("error map");
-		return (-1);
+		free(str[i]);
+		i++;
 	}
-	int x = 0;
-	while(x < 20)
+	free(str);
+}
+void	ft_free_int(t_map *map)
+{
+	int	i;
+
+	i = 0;
+	while(i < map->height)
 	{
-		int y = 0;
-		while(y < 20)
-		{
-			printf("%d ", map->coordonates[x][y]);
-			y++;
-		}
-		x++;
-		printf("\n");
+		free(map->coordonates[i]);
+		i++;
 	}
-
-	//ft_fdf(map);
-
-
-	ft_free_int(map);
-	free(map);
-	return (0);
+	free(map->coordonates);
 }

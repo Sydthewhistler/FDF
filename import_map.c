@@ -6,74 +6,83 @@
 /*   By: scavalli <scavalli@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 15:25:36 by scavalli          #+#    #+#             */
-/*   Updated: 2025/04/22 18:04:58 by scavalli         ###   ########.fr       */
+/*   Updated: 2025/04/23 18:53:16 by scavalli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 
-int *translate_map(char **a_map, t_coordonates *map, int *i, int y)
+void	translate_map(char **a_map, t_map *map)
 {
-	int	j;
-	t_coordonates *new_map;
+	int x;
+	int new_line_size;
 	
-	j = 0;
-	while(a_map[j])
-		j++;
-	new_map = malloc(sizeof(int) * (j + *i + 1));
-	j = 0;
-	while (j < i)
+	if (map->width < 0)
 	{
-		new_map[j] = map[j];
-		j++;
+		new_line_size = 0;
+		while(a_map[new_line_size])
+			new_line_size++;
+		map->width = new_line_size;
 	}
-	j = 0;
-	while (a_map[j])
+	map->coordonates[map->height]= malloc(sizeof(int) * map->width);
+	x = 0;
+	while (a_map[x])
 	{
-		new_map[*i].h = ft_atoi(a_map[j]);
-		new_map[*i].x = j;
-		new_map[*i].y = y;
-		j++;
-		(*i)++;
+		map->coordonates[map->height][x] = ft_atoi(a_map[x]);
+		x++;
 	}
-	free(map);
-	return (new_map);
 }
 
-void	ft_free(char **str)
+int	parameter_initialising(t_map	*map, char *file)
 {
-	int	i;
+	int	map_total_height;
+	int	test_fd;
+	char *line;
 
-	i = 0;
-	while(str[i])
+	map->height = 0;
+	map->width = -1;
+	map_total_height = 0;
+	test_fd = open(file, O_RDONLY);
+	if(test_fd < 1)
+		return (-1);
+	while(1)
 	{
-		free(str[i]);
-		i++;
+		line = get_next_line(test_fd);
+		if (line == NULL)
+			break ;
+		free(line);
+		map_total_height++;
 	}
-	free(str);
+	map->coordonates = malloc(sizeof(int *) * map_total_height);
+	close(test_fd);
+	return (0);
 }
 
-t_coordonates import_map(char *file)
+t_map *import_map(char *file)
 {
-	int fd;
-	t_coordonates *map;
-	char **a_map;
-	int	i;
-	int	y;
+	int		fd;
+	t_map	*map;
+	char	**a_map;
 
 	fd = open(file, O_RDONLY);
 	if(fd < 1)
 		return (NULL);
-	i = 0;
-	y = -1;
+	map = malloc(sizeof(t_map));
+	if(parameter_initialising(map, file) == -1)
+		return (NULL);
 	while(1)
 	{
-		a_map = ft_split(get_next_line(fd), " \n");
-		if (a_map[0] == NULL)
+		char *line = get_next_line(fd);
+		if (!line)
 			break ;
-		y++;
-		map = translate_map(a_map, &map, &i, &y);
-		ft_free(a_map);
+		a_map = ft_split(line, " \n");
+		free(line);
+		if (!a_map[0])
+			break ;
+		translate_map(a_map, map);
+		map->height++;
+		ft_free_tab(a_map);
 	}
+	close(fd);
 	return (map);
 }
