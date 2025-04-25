@@ -6,7 +6,7 @@
 #    By: scavalli <scavalli@student.42nice.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 22:51:05 by scavalli          #+#    #+#              #
-#    Updated: 2025/04/25 17:50:10 by scavalli         ###   ########.fr        #
+#    Updated: 2025/04/25 17:57:47 by scavalli         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,7 +44,10 @@ clean :
 	rm -f $(OBJS)
 
 fclean : clean
-	rm -f $(NAME)
+	rm -f $(NAME)\
+
+superclean : fclean
+	rm -rf minilibx-linux test_maps libft/libft.a
 
 re : fclean all
 
