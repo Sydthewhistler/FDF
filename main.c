@@ -6,7 +6,7 @@
 /*   By: scavalli <scavalli@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 13:02:45 by scavalli          #+#    #+#             */
-/*   Updated: 2025/04/23 18:53:12 by scavalli         ###   ########.fr       */
+/*   Updated: 2025/04/25 12:06:49 by scavalli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,21 +26,20 @@ int main(int argc, char **argv)
 		printf("error map");
 		return (-1);
 	}
-	int x = 0;
-	while(x < 20)
-	{
-		int y = 0;
-		while(y < 20)
-		{
-			printf("%d ", map->coordonates[x][y]);
-			y++;
-		}
-		x++;
-		printf("\n");
-	}
+	// int x = 0;
+	// while(x < map->height)
+	// {
+	// 	int y = 0;
+	// 	while(y < map->width)
+	// 	{
+	// 		printf("%d ", map->coordonates[x][y]);
+	// 		y++;
+	// 	}
+	// 	x++;
+	// 	printf("\n");
+	// }
 
-	//ft_fdf(map);
-
+	ft_fdf(map);
 
 	ft_free_int(map);
 	free(map);
