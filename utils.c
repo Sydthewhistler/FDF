@@ -6,7 +6,7 @@
 /*   By: scavalli <scavalli@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 4025/04/23 15:44:08 by scavalli          #+#    #+#             */
-/*   Updated: 2025/04/27 17:49:17 by scavalli         ###   ########.fr       */
+/*   Updated: 2025/04/27 18:35:37 by scavalli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ int	event_hook(t_data *data)
 
 int	key_hook(int	key, t_data *data)
 {
-	printf("Touche pressée: %d\n", key);
 	if (key == ESCAPE_KEY)
 	{
 		mlx_destroy_image(data->mlx, data->img);
@@ -32,7 +31,7 @@ int	key_hook(int	key, t_data *data)
 		mlx_loop_end(data->mlx);
 		return (1);
 	}
-	if(key == KEY_DOWN || key == KEY_UP || key == KEY_LEFT || key == KEY_RIGHT || key == KEY_X || key == KEY_Z)
+	if(key == KEY_DOWN || key == KEY_UP || key == KEY_LEFT || key == KEY_RIGHT || key == KEY_X || key == KEY_Z || key == KEY_A || key == KEY_Q|| key == KEY_S || key == KEY_W || key == KEY_D || key == KEY_E)
 	{
 		if(key == KEY_DOWN)
 			data->mvt.height_translation += 40;
@@ -46,6 +45,18 @@ int	key_hook(int	key, t_data *data)
 			data->mvt.connection_distance += 5;
 		if(key == KEY_X)
 			data->mvt.connection_distance -= 5;
+		if (key == KEY_A)
+			data->mvt.angle_x += 0.1;
+		if (key == KEY_Q)
+			data->mvt.angle_x -= 0.1;
+		if (key == KEY_S)
+			data->mvt.angle_y += 0.1;
+		if (key == KEY_W)
+			data->mvt.angle_y -= 0.1;
+		if (key == KEY_D)
+			data->mvt.angle_z += 0.1;
+		if (key == KEY_E)
+			data->mvt.angle_z -= 0.1;
 		
 		mlx_destroy_image(data->mlx, data->img);
 		new_img(data);

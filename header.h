@@ -6,7 +6,7 @@
 /*   By: scavalli <scavalli@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 13:01:07 by scavalli          #+#    #+#             */
-/*   Updated: 2025/04/27 17:59:17 by scavalli         ###   ########.fr       */
+/*   Updated: 2025/04/27 18:30:23 by scavalli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,12 @@
 #define KEY_RIGHT  65363
 #define KEY_Z 122
 #define KEY_X 120
+#define KEY_A 97
+#define KEY_Q 113
+#define KEY_S 115
+#define KEY_W 119
+#define KEY_D 100
+#define KEY_E 101
 
 typedef struct s_mvt {
 	int	height_translation;
@@ -79,8 +85,8 @@ int		key_hook(int	key, t_data *data);
 int		event_hook();
 
 void	put_pixel_iso(t_data *data, int x, int y, int z);
-int		make_iso_x(int x, int y);
-int		make_iso_y(int x, int y, int z);
+int make_iso_x(int x, int y, int z, t_data *data);
+int make_iso_y(int x, int y, int z, t_data *data);
 
 void	make_connections(t_data *data, int x, int y);
 

@@ -6,7 +6,7 @@
 /*   By: scavalli <scavalli@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 17:04:55 by scavalli          #+#    #+#             */
-/*   Updated: 2025/04/27 17:42:23 by scavalli         ###   ########.fr       */
+/*   Updated: 2025/04/27 18:19:12 by scavalli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,9 @@ void	ft_fdf(t_data *data)
 	data->mvt.height_translation = 0;
 	data->mvt.width_translation = 0;
 	data->mvt.connection_distance = 30;
+	data->mvt.angle_x = 0.0;
+    data->mvt.angle_y = 0.0;
+    data->mvt.angle_z = 0.0;
 	data->mlx = mlx_init();
 	data->win = mlx_new_window(data->mlx, 1920, 1080, "FDF");
 	new_img(data); // image de base
