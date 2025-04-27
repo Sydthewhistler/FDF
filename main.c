@@ -6,7 +6,7 @@
 /*   By: scavalli <scavalli@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 13:02:45 by scavalli          #+#    #+#             */
-/*   Updated: 2025/04/25 12:06:49 by scavalli         ###   ########.fr       */
+/*   Updated: 2025/04/27 16:50:02 by scavalli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,12 @@
 
 int main(int argc, char **argv)
 {
-	t_map	*map;
+	t_data	data;
 	
 	if (argc != 2)
 		return (-1);
-	map = import_map(argv[1]);
-	if (map == NULL)
+	data.map = import_map(argv[1]);
+	if (data.map == NULL)
 	{
 		printf("error map");
 		return (-1);
@@ -39,9 +39,9 @@ int main(int argc, char **argv)
 	// 	printf("\n");
 	// }
 
-	ft_fdf(map);
+	ft_fdf(&data);
 
-	ft_free_int(map);
-	free(map);
+	ft_free_int(data.map);
+	free(data.map);
 	return (0);
 }

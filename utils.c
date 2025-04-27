@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: scavalli <scavalli@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/23 15:44:08 by scavalli          #+#    #+#             */
-/*   Updated: 2025/04/25 16:59:22 by scavalli         ###   ########.fr       */
+/*   Created: 4025/04/23 15:44:08 by scavalli          #+#    #+#             */
+/*   Updated: 2025/04/27 17:49:17 by scavalli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,15 +24,33 @@ int	event_hook(t_data *data)
 
 int	key_hook(int	key, t_data *data)
 {
+	printf("Touche pressée: %d\n", key);
 	if (key == ESCAPE_KEY)
 	{
 		mlx_destroy_image(data->mlx, data->img);
 		mlx_destroy_window(data->mlx, data->win);
-		//mlx_destroy_display(data->mlx);
-		//free(data->mlx);
 		mlx_loop_end(data->mlx);
 		return (1);
 	}
+	if(key == KEY_DOWN || key == KEY_UP || key == KEY_LEFT || key == KEY_RIGHT || key == KEY_X || key == KEY_Z)
+	{
+		if(key == KEY_DOWN)
+			data->mvt.height_translation += 40;
+		if(key == KEY_UP)
+			data->mvt.height_translation -= 40;
+		if(key == KEY_LEFT)
+			data->mvt.width_translation -= 40;
+		if(key == KEY_RIGHT)
+			data->mvt.width_translation += 40;
+		if(key == KEY_Z)
+			data->mvt.connection_distance += 5;
+		if(key == KEY_X)
+			data->mvt.connection_distance -= 5;
+		
+		mlx_destroy_image(data->mlx, data->img);
+		new_img(data);
+	}
+	
 	return 0;
 }
 
