@@ -115,12 +115,12 @@ void draw_line(t_data *data, int x0, int y0, int x1, int y1)
 void	make_connections(t_data *data, int x, int y)
 {
 	if(y != 0)
-		draw_line(data, make_iso_x((x * data->mvt.connection_distance) + START_PLACE, y * data->mvt.connection_distance, data->map->coordonates[y][x], data) + data->mvt.width_translation, make_iso_y((x * data->mvt.connection_distance) + START_PLACE, y * data->mvt.connection_distance,
-			 data->map->coordonates[y][x], data) + data->mvt.height_translation, make_iso_x((x * data->mvt.connection_distance) + START_PLACE, (y - 1) * data->mvt.connection_distance, data->map->coordonates[y - 1][x], data) + data->mvt.width_translation, 
-			 	make_iso_y((x * data->mvt.connection_distance) + START_PLACE, (y - 1) * data->mvt.connection_distance, data->map->coordonates[y - 1][x], data) + data->mvt.height_translation); // liaison celui de haut
+		draw_line(data, make_iso_x((x * data->mvt.connection_distance), y * data->mvt.connection_distance, data->map->coordonates[y][x], data) + data->mvt.width_translation, make_iso_y((x * data->mvt.connection_distance), y * data->mvt.connection_distance,
+			 data->map->coordonates[y][x], data) + data->mvt.height_translation, make_iso_x((x * data->mvt.connection_distance), (y - 1) * data->mvt.connection_distance, data->map->coordonates[y - 1][x], data) + data->mvt.width_translation, 
+			 	make_iso_y((x * data->mvt.connection_distance), (y - 1) * data->mvt.connection_distance, data->map->coordonates[y - 1][x], data) + data->mvt.height_translation); // liaison celui de haut
 	if(x != 0)
-	draw_line(data, make_iso_x((x * data->mvt.connection_distance) + START_PLACE, y * data->mvt.connection_distance, data->map->coordonates[y][x], data) + data->mvt.width_translation, make_iso_y((x * data->mvt.connection_distance) + START_PLACE, y * data->mvt.connection_distance,
-		data->map->coordonates[y][x], data) + data->mvt.height_translation, make_iso_x(((x - 1) * data->mvt.connection_distance) + START_PLACE, y * data->mvt.connection_distance, data->map->coordonates[y][x - 1], data) + data->mvt.width_translation, 
-			make_iso_y(((x - 1) * data->mvt.connection_distance) + START_PLACE, y * data->mvt.connection_distance, data->map->coordonates[y][x - 1], data) + data->mvt.height_translation); //liaison celui gauche
+	draw_line(data, make_iso_x((x * data->mvt.connection_distance), y * data->mvt.connection_distance, data->map->coordonates[y][x], data) + data->mvt.width_translation, make_iso_y((x * data->mvt.connection_distance), y * data->mvt.connection_distance,
+		data->map->coordonates[y][x], data) + data->mvt.height_translation, make_iso_x(((x - 1) * data->mvt.connection_distance), y * data->mvt.connection_distance, data->map->coordonates[y][x - 1], data) + data->mvt.width_translation, 
+			make_iso_y(((x - 1) * data->mvt.connection_distance), y * data->mvt.connection_distance, data->map->coordonates[y][x - 1], data) + data->mvt.height_translation); //liaison celui gauche
 	
 }

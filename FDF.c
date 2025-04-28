@@ -24,7 +24,7 @@ void	create_img(t_data *data)
 		int y = 0;
 		while(y < data->map->width)
 		{
-			put_pixel_iso(data,(y * data->mvt.connection_distance) + START_PLACE, x * data->mvt.connection_distance, data->map->coordonates[x][y]); //inversion x/y
+			put_pixel_iso(data,(y * data->mvt.connection_distance), x * data->mvt.connection_distance, data->map->coordonates[x][y]); //inversion x/y
 			make_connections(data, y, x); //inversion x/y
 			y++;
 		}
@@ -42,8 +42,8 @@ void	new_img(t_data *data)
 
 void	ft_fdf(t_data *data)
 {
-	data->mvt.height_translation = 0;
-	data->mvt.width_translation = 0;
+	data->mvt.height_translation = 200;
+	data->mvt.width_translation = 800;
 	data->mvt.connection_distance = 30;
 	data->mvt.angle_x = 0.0;
     data->mvt.angle_y = 0.0;

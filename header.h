@@ -25,7 +25,6 @@
 #define MAP_HEIGHT 3
 #define ISO_ANGLE 0.523599 + 0.1
 #define ESCAPE_KEY 65307
-#define START_PLACE 600
 #define KEY_UP     65362
 #define KEY_DOWN   65364
 #define KEY_LEFT   65361

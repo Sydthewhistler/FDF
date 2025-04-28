@@ -26,21 +26,9 @@ int main(int argc, char **argv)
 		printf("error map");
 		return (-1);
 	}
-	// int x = 0;
-	// while(x < map->height)
-	// {
-	// 	int y = 0;
-	// 	while(y < map->width)
-	// 	{
-	// 		printf("%d ", map->coordonates[x][y]);
-	// 		y++;
-	// 	}
-	// 	x++;
-	// 	printf("\n");
-	// }
-
 	ft_fdf(&data);
-
+	mlx_destroy_display(data.mlx);
+	free(data.mlx);
 	ft_free_int(data.map);
 	free(data.map);
 	return (0);
