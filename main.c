@@ -6,7 +6,7 @@
 /*   By: scavalli <scavalli@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 13:02:45 by scavalli          #+#    #+#             */
-/*   Updated: 2025/05/02 15:44:55 by scavalli         ###   ########.fr       */
+/*   Updated: 2025/05/02 16:55:57 by scavalli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	main(int argc, char **argv)
 	data.map = import_map(argv[1]);
 	if (data.map == NULL)
 	{
-		printf("error map");
+		ft_printf("error map\n");
 		return (-1);
 	}
 	ft_fdf(&data);
