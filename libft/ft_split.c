@@ -6,21 +6,21 @@
 /*   By: scavalli <scavalli@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 14:22:29 by scavalli          #+#    #+#             */
-/*   Updated: 2025/04/23 16:12:05 by scavalli         ###   ########.fr       */
+/*   Updated: 2025/05/02 15:37:08 by scavalli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static bool is_charset(char c, char *charset)
+static bool	is_charset(char c, char *charset)
 {
 	int	i;
 
 	i = 0;
-	while(charset[i])
+	while (charset[i])
 	{
-		if(charset[i] == c)
-			return (true); 
+		if (charset[i] == c)
+			return (true);
 		i++;
 	}
 	return (false);
@@ -35,7 +35,8 @@ static size_t	count_words(char const *s, char *charset)
 	i = 0;
 	while (s[i])
 	{
-		if (!is_charset(s[i], charset) && (is_charset(s[i+ 1], charset) || s[i + 1] == '\0'))
+		if (!is_charset(s[i], charset) && (is_charset(s[i + 1], charset) || s[i
+					+ 1] == '\0'))
 			words++;
 		i++;
 	}

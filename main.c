@@ -6,18 +6,16 @@
 /*   By: scavalli <scavalli@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 13:02:45 by scavalli          #+#    #+#             */
-/*   Updated: 2025/04/27 16:50:02 by scavalli         ###   ########.fr       */
+/*   Updated: 2025/05/02 15:44:55 by scavalli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 
-
-
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
 	t_data	data;
-	
+
 	if (argc != 2)
 		return (-1);
 	data.map = import_map(argv[1]);

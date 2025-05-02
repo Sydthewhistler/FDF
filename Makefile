@@ -6,11 +6,11 @@
 #    By: scavalli <scavalli@student.42nice.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 22:51:05 by scavalli          #+#    #+#              #
-#    Updated: 2025/04/25 17:57:47 by scavalli         ###   ########.fr        #
+#    Updated: 2025/05/02 16:51:19 by scavalli         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-FILE = main.c FDF.c import_map.c put_pixel.c utils.c
+FILE = main.c FDF.c import_map.c put_pixel.c utils.c event.c coordonates_calculator.c
 LIBRARIES = libft/libft.a minilibx-linux/libmlx.a
 NAME=fdf
 CC=clang
