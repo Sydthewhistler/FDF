@@ -1,86 +1,73 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   import_map.c                                       :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: scavalli <scavalli@student.42nice.fr>      +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/22 15:25:36 by scavalli          #+#    #+#             */
-/*   Updated: 2025/05/02 15:44:34 by scavalli         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "header.h"
 
-void	translate_map(char **a_map, t_map *map)
+static int count_lines(const char *file)
 {
-	int	x;
-	int	new_line_size;
+    int   fd = open(file, O_RDONLY);
+    int   count = 0;
+    char *line;
 
-	if (map->width < 0)
-	{
-		new_line_size = 0;
-		while (a_map[new_line_size])
-			new_line_size++;
-		map->width = new_line_size;
-	}
-	map->coordonates[map->height] = malloc(sizeof(int) * map->width);
-	x = 0;
-	while (a_map[x])
-	{
-		map->coordonates[map->height][x] = ft_atoi(a_map[x]);
-		x++;
-	}
+    while ((line = get_next_line(fd)) != NULL) {
+        free(line);
+        count++;
+    }
+    close(fd);
+    return count;
 }
 
-int	parameter_initialising(t_map *map, char *file)
+static void parse_row(char **tokens, t_map *map, int row)
 {
-	int		map_total_height;
-	int		test_fd;
-	char	*line;
+    // First row: determine map width from token count
+    if (map->width < 0) {
+        int n = 0;
+        while (tokens[n])
+            n++;
+        map->width = n;
+    }
 
-	map->height = 0;
-	map->width = -1;
-	map_total_height = 0;
-	test_fd = open(file, O_RDONLY);
-	while (1)
-	{
-		line = get_next_line(test_fd);
-		if (line == NULL)
-			break ;
-		free(line);
-		map_total_height++;
-	}
-	map->coordonates = malloc(sizeof(int *) * map_total_height);
-	close(test_fd);
-	return (0);
+    map->coords[row] = malloc(sizeof(int) * map->width);
+    for (int col = 0; tokens[col] && col < map->width; col++) {
+        int val = ft_atoi(tokens[col]);
+        map->coords[row][col] = val;
+        if (val < map->z_min) map->z_min = val;
+        if (val > map->z_max) map->z_max = val;
+    }
 }
 
-t_map	*import_map(char *file)
+t_map *import_map(char *file)
 {
-	int		fd;
-	t_map	*map;
-	char	**a_map;
-	char	*line;
+    int fd = open(file, O_RDONLY);
+    if (fd < 0)
+        return NULL;
 
-	fd = open(file, O_RDONLY);
-	if (fd < 1)
-		return (NULL);
-	map = malloc(sizeof(t_map));
-	parameter_initialising(map, file);
-	while (1)
-	{
-		line = get_next_line(fd);
-		if (!line)
-			break ;
-		a_map = ft_split(line, " \n");
-		free(line);
-		if (!a_map[0])
-			break ;
-		translate_map(a_map, map);
-		map->height++;
-		ft_free_tab(a_map);
-	}
-	close(fd);
-	return (map);
+    t_map *map = malloc(sizeof(t_map));
+    if (!map)
+        return NULL;
+
+    map->height = count_lines(file);
+    map->width  = -1;
+    map->z_min  = INT_MAX;
+    map->z_max  = INT_MIN;
+    map->coords = malloc(sizeof(int *) * map->height);
+
+    int   row = 0;
+    char *line;
+    while ((line = get_next_line(fd)) != NULL) {
+        char **tokens = ft_split(line, " \n");
+        free(line);
+        if (!tokens[0]) {
+            ft_free_tab(tokens);
+            break;
+        }
+        parse_row(tokens, map, row);
+        ft_free_tab(tokens);
+        row++;
+    }
+    map->height = row;
+
+    // Flat map edge case: set range to [0, 1] to avoid division by zero in color
+    if (map->z_min == map->z_max)
+        map->z_max = map->z_min + 1;
+
+    close(fd);
+    return map;
 }

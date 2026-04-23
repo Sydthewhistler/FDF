@@ -1,98 +1,72 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   coordonates_calculator.c                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: scavalli <scavalli@student.42nice.fr>      +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/02 16:37:53 by scavalli          #+#    #+#             */
-/*   Updated: 2025/05/02 16:50:36 by scavalli         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "header.h"
 
-int	make_iso_x(int x, int y, int z, t_data *data)
-{
-	float	final_x;
-	float	final_y;
+// Intermediate result of the full 3D rotation matrix
+typedef struct {
+    float rx;
+    float ry;
+    float rz;
+} t_rot3d;
 
-	final_x = (x * cos(data->mvt.angle_y) * cos(data->mvt.angle_z) + (y
-				* cos(data->mvt.angle_x) - z * sin(data->mvt.angle_x))
-			* (-sin(data->mvt.angle_z)) + (y * sin(data->mvt.angle_x) + z
-				* cos(data->mvt.angle_x)) * sin(data->mvt.angle_y)
-			* cos(data->mvt.angle_z));
-	final_y = (x * cos(data->mvt.angle_y) * sin(data->mvt.angle_z) + (y
-				* cos(data->mvt.angle_x) - z * sin(data->mvt.angle_x))
-			* cos(data->mvt.angle_z) + (y * sin(data->mvt.angle_x) + z
-				* cos(data->mvt.angle_x)) * sin(data->mvt.angle_y)
-			* sin(data->mvt.angle_z));
-	return ((int)((final_x - final_y) * cos(ISO_ANGLE)));
+// Apply Euler rotations (X then Y then Z) to a 3D point
+static t_rot3d rotate_3d(int x, int y, int z, t_mvt *mvt)
+{
+    float cx = cos(mvt->angle_x), sx = sin(mvt->angle_x);
+    float cy = cos(mvt->angle_y), sy = sin(mvt->angle_y);
+    float cz = cos(mvt->angle_z), sz = sin(mvt->angle_z);
+
+    t_rot3d r;
+    r.rx = x * cy * cz + (y * cx - z * sx) * (-sz) + (y * sx + z * cx) * sy * cz;
+    r.ry = x * cy * sz + (y * cx - z * sx) *   cz  + (y * sx + z * cx) * sy * sz;
+    r.rz = -x * sy     + (y * sx + z * cx) * cy;
+    return r;
 }
 
-int	make_iso_y(int x, int y, int z, t_data *data)
+// Project rotated point to isometric screen X
+int make_iso_x(int x, int y, int z, t_data *data)
 {
-	float	final_x;
-	float	final_y;
-	float	final_z;
-
-	final_x = (x * cos(data->mvt.angle_y) * cos(data->mvt.angle_z) + (y
-				* cos(data->mvt.angle_x) - z * sin(data->mvt.angle_x))
-			* (-sin(data->mvt.angle_z)) + (y * sin(data->mvt.angle_x) + z
-				* cos(data->mvt.angle_x)) * sin(data->mvt.angle_y)
-			* cos(data->mvt.angle_z));
-	final_y = (x * cos(data->mvt.angle_y) * sin(data->mvt.angle_z) + (y
-				* cos(data->mvt.angle_x) - z * sin(data->mvt.angle_x))
-			* cos(data->mvt.angle_z) + (y * sin(data->mvt.angle_x) + z
-				* cos(data->mvt.angle_x)) * sin(data->mvt.angle_y)
-			* sin(data->mvt.angle_z));
-	final_z = (-x * sin(data->mvt.angle_y) + (y * sin(data->mvt.angle_x) + z
-				* cos(data->mvt.angle_x)) * cos(data->mvt.angle_y));
-	return ((int)((final_x + final_y) * sin(ISO_ANGLE) - final_z));
+    t_rot3d r = rotate_3d(x, y, z, &data->mvt);
+    return (int)((r.rx - r.ry) * cos(ISO_ANGLE));
 }
 
-void	connection_y_calculate(t_data *data, int x, int y)
+// Project rotated point to isometric screen Y
+int make_iso_y(int x, int y, int z, t_data *data)
 {
-	t_coordonates	coordonates;
-
-	coordonates.x = make_iso_x((x * data->mvt.connection_distance), y
-			* data->mvt.connection_distance, data->map->coordonates[y][x], data)
-		+ data->mvt.width_translation;
-	coordonates.y = make_iso_y((x * data->mvt.connection_distance), y
-			* data->mvt.connection_distance, data->map->coordonates[y][x], data)
-		+ data->mvt.height_translation;
-	if (y != 0)
-		draw_line(data, coordonates, make_iso_x((x
-					* data->mvt.connection_distance), (y - 1)
-				* data->mvt.connection_distance, data->map->coordonates[y
-				- 1][x], data) + data->mvt.width_translation, make_iso_y((x
-					* data->mvt.connection_distance), (y - 1)
-				* data->mvt.connection_distance, data->map->coordonates[y
-				- 1][x], data) + data->mvt.height_translation);
+    t_rot3d r = rotate_3d(x, y, z, &data->mvt);
+    return (int)((r.rx + r.ry) * sin(ISO_ANGLE) - r.rz);
 }
 
-void	connection_x_calculate(t_data *data, int x, int y)
+// Compute the screen position of a map vertex (col, row)
+static t_coords2d screen_pos(t_data *data, int col, int row)
 {
-	t_coordonates	coordonates;
+    int      dist = data->mvt.connection_distance;
+    int      z    = data->map->coords[row][col];
+    t_coords2d p;
 
-	coordonates.x = make_iso_x((x * data->mvt.connection_distance), y
-			* data->mvt.connection_distance, data->map->coordonates[y][x], data)
-		+ data->mvt.width_translation;
-	coordonates.y = make_iso_y((x * data->mvt.connection_distance), y
-			* data->mvt.connection_distance, data->map->coordonates[y][x], data)
-		+ data->mvt.height_translation;
-	if (x != 0)
-		draw_line(data, coordonates, make_iso_x(((x - 1)
-					* data->mvt.connection_distance), y
-				* data->mvt.connection_distance, data->map->coordonates[y][x
-				- 1], data) + data->mvt.width_translation, make_iso_y(((x - 1)
-					* data->mvt.connection_distance), y
-				* data->mvt.connection_distance, data->map->coordonates[y][x
-				- 1], data) + data->mvt.height_translation);
+    p.x = make_iso_x(col * dist, row * dist, z, data) + data->mvt.width_translation;
+    p.y = make_iso_y(col * dist, row * dist, z, data) + data->mvt.height_translation;
+    return p;
 }
 
-void	make_connections(t_data *data, int x, int y)
+// Draw edges from (col, row) to its left and top neighbours, with color interpolation
+void make_connections(t_data *data, int col, int row)
 {
-	connection_y_calculate(data, x, y);
-	connection_x_calculate(data, x, y);
+    t_coords2d cur      = screen_pos(data, col, row);
+    int        cur_z    = data->map->coords[row][col];
+    int        cur_color = height_to_color(cur_z, data->map->z_min, data->map->z_max);
+
+    // Edge going up (to previous row)
+    if (row > 0) {
+        t_coords2d prev = screen_pos(data, col, row - 1);
+        int        prev_z    = data->map->coords[row - 1][col];
+        int        prev_color = height_to_color(prev_z, data->map->z_min, data->map->z_max);
+        draw_line(data, cur, prev.x, prev.y, cur_color, prev_color);
+    }
+
+    // Edge going left (to previous column)
+    if (col > 0) {
+        t_coords2d prev = screen_pos(data, col - 1, row);
+        int        prev_z    = data->map->coords[row][col - 1];
+        int        prev_color = height_to_color(prev_z, data->map->z_min, data->map->z_max);
+        draw_line(data, cur, prev.x, prev.y, cur_color, prev_color);
+    }
 }

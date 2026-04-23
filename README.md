@@ -29,6 +29,7 @@ The renderer is built on top of **MinilibX**, a minimal X11 graphics library, an
 ## Features
 
 - Isometric 3D projection with configurable angle
+- Height-based color gradient: blue (valleys) → green (ground) → red (peaks), interpolated along every edge
 - Real-time keyboard-driven rotation on all three axes (X, Y, Z)
 - Translation and zoom controls
 - Bresenham-style line drawing connecting adjacent vertices
@@ -128,13 +129,14 @@ make superclean
 
 | Target       | Description                                              |
 |--------------|----------------------------------------------------------|
-| `all`        | Build the `fdf` executable (default)                    |
-| `start`      | Download dependencies and compile everything             |
-| `download`   | Fetch MinilibX and sample maps only                      |
-| `clean`      | Remove `.o` object files                                 |
-| `fclean`     | Remove `.o` files and the `fdf` binary                   |
-| `re`         | Full rebuild (`fclean` + `all`)                          |
-| `superclean` | Remove all generated files including libraries and maps  |
+| `all`        | Build the `fdf` executable (default)                             |
+| `debug`      | Build with `-g3` and AddressSanitizer (implies `re`)             |
+| `start`      | Download dependencies and compile everything                     |
+| `download`   | Fetch MinilibX and sample maps only                              |
+| `clean`      | Remove `.o` object files                                         |
+| `fclean`     | Remove `.o` files and the `fdf` binary                           |
+| `re`         | Full rebuild (`fclean` + `all`)                                  |
+| `superclean` | Remove all generated files including libraries and maps          |
 
 ### Compiler flags
 

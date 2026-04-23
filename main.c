@@ -1,33 +1,24 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: scavalli <scavalli@student.42nice.fr>      +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/22 13:02:45 by scavalli          #+#    #+#             */
-/*   Updated: 2025/05/02 16:55:57 by scavalli         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "header.h"
 
-int	main(int argc, char **argv)
+int main(int argc, char **argv)
 {
-	t_data	data;
+    if (argc != 2) {
+        ft_printf("Usage: %s <map_file>\n", argv[0]);
+        return 1;
+    }
 
-	if (argc != 2)
-		return (-1);
-	data.map = import_map(argv[1]);
-	if (data.map == NULL)
-	{
-		ft_printf("error map\n");
-		return (-1);
-	}
-	ft_fdf(&data);
-	mlx_destroy_display(data.mlx);
-	free(data.mlx);
-	ft_free_int(data.map);
-	free(data.map);
-	return (0);
+    t_data data;
+    data.map = import_map(argv[1]);
+    if (!data.map) {
+        ft_printf("Error: could not load map '%s'\n", argv[1]);
+        return 1;
+    }
+
+    ft_fdf(&data);
+
+    mlx_destroy_display(data.mlx);
+    free(data.mlx);
+    ft_free_int(data.map);
+    free(data.map);
+    return 0;
 }

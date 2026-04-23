@@ -1,103 +1,113 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   header.h                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: scavalli <scavalli@student.42nice.fr>      +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/22 13:01:07 by scavalli          #+#    #+#             */
-/*   Updated: 2025/05/02 16:49:56 by scavalli         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef HEADER_H
-# define HEADER_H
-# include "libft/libft.h"
-# include "minilibx-linux/mlx.h"
-# include <fcntl.h>
-# include <math.h>
-# include <stdio.h>
-# include <stdlib.h>
-# include <unistd.h>
-# define TILE_WIDTH 32
-# define TILE_HEIGHT 16
-# define MAP_WIDTH 3
-# define MAP_HEIGHT 3
-# define ISO_ANGLE 0.623599
-# define ESCAPE_KEY 65307
-# define KEY_UP 65362
-# define KEY_DOWN 65364
-# define KEY_LEFT 65361
-# define KEY_RIGHT 65363
-# define KEY_Z 122
-# define KEY_X 120
-# define KEY_A 97
-# define KEY_Q 113
-# define KEY_S 115
-# define KEY_W 119
-# define KEY_D 100
-# define KEY_E 101
+#define HEADER_H
 
-typedef struct s_mvt
-{
-	int		height_translation;
-	int		width_translation;
-	int		connection_distance;
-	float	angle_x;
-	float	angle_y;
-	float	angle_z;
-}			t_mvt;
+#include "minilibx-linux/mlx.h"
+#include "libft/libft.h"
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <fcntl.h>
+#include <math.h>
+#include <limits.h>
 
-typedef struct s_map
-{
-	int		**coordonates;
-	int		height;
-	int		width;
-	int		size;
-}			t_map;
+// Window dimensions
+#define WIN_W       1920
+#define WIN_H       1080
 
-typedef struct s_data
-{
-	void	*mlx;
-	void	*win;
-	void	*img;
-	char	*addr;
-	int		bpp;
-	int		line_len;
-	int		endian;
-	t_mvt	mvt;
-	t_map	*map;
-}			t_data;
+// Isometric projection angle (~30° + small offset)
+#define ISO_ANGLE   (0.523599 + 0.1)
 
-typedef struct s_line
-{
-	int		steps;
-	float	x_inc;
-	float	y_inc;
-	float	x;
-	float	y;
-}			t_line;
+// Keyboard keycodes (X11)
+#define ESCAPE_KEY  65307
+#define KEY_UP      65362
+#define KEY_DOWN    65364
+#define KEY_LEFT    65361
+#define KEY_RIGHT   65363
+#define KEY_Z       122
+#define KEY_X       120
+#define KEY_A       97
+#define KEY_Q       113
+#define KEY_S       115
+#define KEY_W       119
+#define KEY_D       100
+#define KEY_E       101
 
-typedef struct s_coordonates
-{
-	int		x;
-	int		y;
-}			t_coordonates;
+// Height-based color gradient: blue (valleys) → green (ground) → red (peaks)
+#define COLOR_LOW   0x0055FF
+#define COLOR_MID   0x00FF88
+#define COLOR_HIGH  0xFF3300
 
-t_map		*import_map(char *file);
-void		ft_fdf(t_data *data);
-void		new_img(t_data *data);
+// Camera / view parameters
+typedef struct s_mvt {
+    int     height_translation;
+    int     width_translation;
+    int     connection_distance;
+    float   angle_x;
+    float   angle_y;
+    float   angle_z;
+} t_mvt;
 
-void		ft_free_tab(char **str);
-void		ft_free_int(t_map *map);
-int			key_hook(int key, t_data *data);
-int			event_hook(t_data *data);
+// Height map data
+typedef struct s_map {
+    int   **coords;
+    int     height;
+    int     width;
+    int     z_min;
+    int     z_max;
+} t_map;
 
-void		put_pixel_iso(t_data *data, int x, int y, int z);
+// Main application state
+typedef struct s_data {
+    void   *mlx;
+    void   *win;
+    void   *img;
+    char   *addr;
+    int     bpp;
+    int     line_len;
+    int     endian;
+    t_mvt   mvt;
+    t_map  *map;
+} t_data;
 
-int			make_iso_x(int x, int y, int z, t_data *data);
-int			make_iso_y(int x, int y, int z, t_data *data);
-void		make_connections(t_data *data, int x, int y);
-void		draw_line(t_data *data, t_coordonates coordonates, int x1, int y1);
+// Line drawing helper
+typedef struct s_line {
+    int     steps;
+    float   x_inc;
+    float   y_inc;
+    float   x;
+    float   y;
+} t_line;
+
+// 2D projected coordinates
+typedef struct s_coords2d {
+    int x;
+    int y;
+} t_coords2d;
+
+// import_map.c
+t_map       *import_map(char *file);
+
+// FDF.c
+void         ft_fdf(t_data *data);
+void         new_img(t_data *data);
+
+// put_pixel.c
+int          height_to_color(int z, int z_min, int z_max);
+void         put_pixel(t_data *data, int x, int y, int color);
+void         put_pixel_iso(t_data *data, int x, int y, int z);
+void         draw_line(t_data *data, t_coords2d start, int x1, int y1, int c0, int c1);
+
+// coordonates_calculator.c
+int          make_iso_x(int x, int y, int z, t_data *data);
+int          make_iso_y(int x, int y, int z, t_data *data);
+void         make_connections(t_data *data, int x, int y);
+
+// utils.c
+void         ft_free_tab(char **str);
+void         ft_free_int(t_map *map);
+
+// event.c
+int          event_hook(t_data *data);
+int          key_hook(int key, t_data *data);
 
 #endif
