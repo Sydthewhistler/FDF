@@ -14,8 +14,8 @@
 #define WIN_W       1920
 #define WIN_H       1080
 
-// Isometric projection angle (~30° + small offset)
-#define ISO_ANGLE   (0.523599 + 0.1)
+// Control panel width (left strip)
+#define PANEL_W     192
 
 // Keyboard keycodes (X11)
 #define ESCAPE_KEY  65307
@@ -40,7 +40,7 @@
 #define MOUSE_SCROLL_DN 5
 
 // Mouse drag sensitivity
-#define MOUSE_ROT_SENS  0.007f   // radians per pixel (rotation)
+#define MOUSE_ROT_SENS  0.007f
 
 // Hypsometric color palette is defined in put_pixel.c (multi-stop gradient)
 
@@ -52,11 +52,12 @@ typedef struct s_mvt {
     float   angle_x;
     float   angle_y;
     float   angle_z;
+    float   iso_angle;   // isometric projection angle (runtime-adjustable)
 } t_mvt;
 
 // Mouse drag state
 typedef struct s_mouse {
-    int button;   // held button (0 = none)
+    int button;
     int last_x;
     int last_y;
 } t_mouse;
@@ -116,6 +117,11 @@ void         draw_line(t_data *data, t_coords2d start, int x1, int y1, int c0, i
 int          make_iso_x(int x, int y, int z, t_data *data);
 int          make_iso_y(int x, int y, int z, t_data *data);
 void         make_connections(t_data *data, int x, int y);
+
+// panel.c
+void         draw_panel(t_data *data);
+void         draw_panel_text(t_data *data);
+int          panel_click(int x, int y, t_data *data);
 
 // utils.c
 void         ft_free_tab(char **str);

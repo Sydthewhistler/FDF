@@ -17,17 +17,20 @@ void new_img(t_data *data)
     data->img  = mlx_new_image(data->mlx, WIN_W, WIN_H);
     data->addr = mlx_get_data_addr(data->img, &data->bpp, &data->line_len, &data->endian);
     create_img(data);
+    draw_panel(data);                                          // panel bg over image buffer
     mlx_put_image_to_window(data->mlx, data->win, data->img, 0, 0);
+    draw_panel_text(data);                                     // text on top of window
 }
 
 void ft_fdf(t_data *data)
 {
     data->mvt.height_translation  = 200;
-    data->mvt.width_translation   = 800;
+    data->mvt.width_translation   = 900;
     data->mvt.connection_distance = 30;
-    data->mvt.angle_x = 0.0f;
-    data->mvt.angle_y = 0.0f;
-    data->mvt.angle_z = 0.0f;
+    data->mvt.angle_x   = 0.0f;
+    data->mvt.angle_y   = 0.0f;
+    data->mvt.angle_z   = 0.0f;
+    data->mvt.iso_angle = 0.6236f;   // default: ~35.7° (0.523599 + 0.1)
 
     data->mouse.button = 0;
     data->mouse.last_x = 0;
@@ -37,16 +40,11 @@ void ft_fdf(t_data *data)
     data->win = mlx_new_window(data->mlx, WIN_W, WIN_H, "FDF");
     new_img(data);
 
-    // Keyboard
     mlx_key_hook(data->win, key_hook, data);
-
-    // Mouse: press, release, motion
     mlx_hook(data->win, 4, 1L << 2, mouse_press,   data);
     mlx_hook(data->win, 5, 1L << 3, mouse_release, data);
     mlx_hook(data->win, 6, 1L << 6, mouse_move,    data);
-
-    // Window close button
-    mlx_hook(data->win, 17, 0, event_hook, data);
+    mlx_hook(data->win, 17, 0,      event_hook,    data);
 
     mlx_loop(data->mlx);
 }

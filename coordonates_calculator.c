@@ -25,21 +25,21 @@ static t_rot3d rotate_3d(int x, int y, int z, t_mvt *mvt)
 int make_iso_x(int x, int y, int z, t_data *data)
 {
     t_rot3d r = rotate_3d(x, y, z, &data->mvt);
-    return (int)((r.rx - r.ry) * cos(ISO_ANGLE));
+    return (int)((r.rx - r.ry) * cos(data->mvt.iso_angle));
 }
 
 // Project rotated point to isometric screen Y
 int make_iso_y(int x, int y, int z, t_data *data)
 {
     t_rot3d r = rotate_3d(x, y, z, &data->mvt);
-    return (int)((r.rx + r.ry) * sin(ISO_ANGLE) - r.rz);
+    return (int)((r.rx + r.ry) * sin(data->mvt.iso_angle) - r.rz);
 }
 
 // Compute the screen position of a map vertex (col, row)
 static t_coords2d screen_pos(t_data *data, int col, int row)
 {
-    int      dist = data->mvt.connection_distance;
-    int      z    = data->map->coords[row][col];
+    int        dist = data->mvt.connection_distance;
+    int        z    = data->map->coords[row][col];
     t_coords2d p;
 
     p.x = make_iso_x(col * dist, row * dist, z, data) + data->mvt.width_translation;
@@ -50,21 +50,18 @@ static t_coords2d screen_pos(t_data *data, int col, int row)
 // Draw edges from (col, row) to its left and top neighbours, with color interpolation
 void make_connections(t_data *data, int col, int row)
 {
-    t_coords2d cur      = screen_pos(data, col, row);
-    int        cur_z    = data->map->coords[row][col];
+    t_coords2d cur       = screen_pos(data, col, row);
+    int        cur_z     = data->map->coords[row][col];
     int        cur_color = height_to_color(cur_z, data->map->z_min, data->map->z_max);
 
-    // Edge going up (to previous row)
     if (row > 0) {
-        t_coords2d prev = screen_pos(data, col, row - 1);
+        t_coords2d prev      = screen_pos(data, col, row - 1);
         int        prev_z    = data->map->coords[row - 1][col];
         int        prev_color = height_to_color(prev_z, data->map->z_min, data->map->z_max);
         draw_line(data, cur, prev.x, prev.y, cur_color, prev_color);
     }
-
-    // Edge going left (to previous column)
     if (col > 0) {
-        t_coords2d prev = screen_pos(data, col - 1, row);
+        t_coords2d prev      = screen_pos(data, col - 1, row);
         int        prev_z    = data->map->coords[row][col - 1];
         int        prev_color = height_to_color(prev_z, data->map->z_min, data->map->z_max);
         draw_line(data, cur, prev.x, prev.y, cur_color, prev_color);

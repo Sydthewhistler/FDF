@@ -3,7 +3,7 @@ CC      = clang
 CFLAGS  = -Wall -Wextra -Werror
 LDFLAGS = -lXext -lX11 -lm -lz
 
-SRCS    = main.c FDF.c import_map.c put_pixel.c coordonates_calculator.c event.c utils.c
+SRCS    = main.c FDF.c import_map.c put_pixel.c coordonates_calculator.c event.c utils.c panel.c
 OBJS    = $(SRCS:.c=.o)
 LIBS    = libft/libft.a minilibx-linux/libmlx.a
 
