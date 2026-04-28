@@ -1,27 +1,23 @@
 #include "header.h"
 
 // ---------------------------------------------------------------------------
-// Color gradient — hypsometric tint (geographic elevation palette)
-//
-//   t = 0.00  deep water    #002880
-//   t = 0.18  shallow water #0066CC
-//   t = 0.28  coast / lagoon #55AAEE
-//   t = 0.33  beach / sand   #E8D5A3
-//   t = 0.42  lowland plain  #A8D878
-//   t = 0.55  grassland      #4CA840
-//   t = 0.67  upland forest  #2D7D32
-//   t = 0.77  highland brown #8C6B3E
-//   t = 0.87  rocky terrain  #706050
-//   t = 0.93  mountain grey  #AAAAAA
-//   t = 1.00  snow cap       #F0F0FF
+// Color utilities
 // ---------------------------------------------------------------------------
 
-typedef struct {
-    float t;
-    int   color;
-} t_stop;
+static int lerp_color(int c0, int c1, float t)
+{
+    int r = (int)(((c0 >> 16) & 0xFF) + (((c1 >> 16) & 0xFF) - ((c0 >> 16) & 0xFF)) * t);
+    int g = (int)(((c0 >>  8) & 0xFF) + (((c1 >>  8) & 0xFF) - ((c0 >>  8) & 0xFF)) * t);
+    int b = (int)(((c0      ) & 0xFF) + (((c1      ) & 0xFF) - ((c0      ) & 0xFF)) * t);
+    return (r << 16) | (g << 8) | b;
+}
 
-static const t_stop STOPS[] = {
+// ---------------------------------------------------------------------------
+// Hypsometric palette — 11-stop geographic tint
+// ---------------------------------------------------------------------------
+typedef struct { float t; int color; } t_stop;
+
+static const t_stop HYPS[] = {
     { 0.00f, 0x002880 },
     { 0.18f, 0x0066CC },
     { 0.28f, 0x55AAEE },
@@ -34,35 +30,70 @@ static const t_stop STOPS[] = {
     { 0.93f, 0xAAAAAA },
     { 1.00f, 0xF0F0FF },
 };
+#define N_HYPS (int)(sizeof(HYPS) / sizeof(HYPS[0]))
 
-#define N_STOPS (int)(sizeof(STOPS) / sizeof(STOPS[0]))
-
-// Linear interpolation between two packed RGB colors
-static int lerp_color(int c0, int c1, float t)
+static int color_hypsometric(float t)
 {
-    int r = (int)(((c0 >> 16) & 0xFF) + (((c1 >> 16) & 0xFF) - ((c0 >> 16) & 0xFF)) * t);
-    int g = (int)(((c0 >>  8) & 0xFF) + (((c1 >>  8) & 0xFF) - ((c0 >>  8) & 0xFF)) * t);
-    int b = (int)(((c0      ) & 0xFF) + (((c1      ) & 0xFF) - ((c0      ) & 0xFF)) * t);
-    return (r << 16) | (g << 8) | b;
-}
-
-// Map a height value to a color using the hypsometric multi-stop palette
-int height_to_color(int z, int z_min, int z_max)
-{
-    float t = (float)(z - z_min) / (float)(z_max - z_min);
-    if (t <= 0.0f) return STOPS[0].color;
-    if (t >= 1.0f) return STOPS[N_STOPS - 1].color;
-
-    for (int i = 0; i < N_STOPS - 1; i++) {
-        if (t <= STOPS[i + 1].t) {
-            float local_t = (t - STOPS[i].t) / (STOPS[i + 1].t - STOPS[i].t);
-            return lerp_color(STOPS[i].color, STOPS[i + 1].color, local_t);
+    if (t <= 0.0f) return HYPS[0].color;
+    if (t >= 1.0f) return HYPS[N_HYPS - 1].color;
+    for (int i = 0; i < N_HYPS - 1; i++) {
+        if (t <= HYPS[i + 1].t) {
+            float lt = (t - HYPS[i].t) / (HYPS[i + 1].t - HYPS[i].t);
+            return lerp_color(HYPS[i].color, HYPS[i + 1].color, lt);
         }
     }
-    return STOPS[N_STOPS - 1].color;
+    return HYPS[N_HYPS - 1].color;
 }
 
-// Write a single pixel directly into the image buffer
+// ---------------------------------------------------------------------------
+// Monochrome — dark grey to white
+// ---------------------------------------------------------------------------
+static int color_mono(float t)
+{
+    int v = 55 + (int)(t * 200);
+    return (v << 16) | (v << 8) | v;
+}
+
+// ---------------------------------------------------------------------------
+// Thermal — cold blue → cyan → green → yellow → red
+// ---------------------------------------------------------------------------
+static const t_stop THERM[] = {
+    { 0.00f, 0x0022CC },
+    { 0.25f, 0x00CCFF },
+    { 0.50f, 0x00FF88 },
+    { 0.75f, 0xFFCC00 },
+    { 1.00f, 0xFF1100 },
+};
+#define N_THERM (int)(sizeof(THERM) / sizeof(THERM[0]))
+
+static int color_thermal(float t)
+{
+    if (t <= 0.0f) return THERM[0].color;
+    if (t >= 1.0f) return THERM[N_THERM - 1].color;
+    for (int i = 0; i < N_THERM - 1; i++) {
+        if (t <= THERM[i + 1].t) {
+            float lt = (t - THERM[i].t) / (THERM[i + 1].t - THERM[i].t);
+            return lerp_color(THERM[i].color, THERM[i + 1].color, lt);
+        }
+    }
+    return THERM[N_THERM - 1].color;
+}
+
+// ---------------------------------------------------------------------------
+// Public: map a raw Z value to a color
+// ---------------------------------------------------------------------------
+int height_to_color(int z, int z_min, int z_max, int mode)
+{
+    float t = (float)(z - z_min) / (float)(z_max - z_min);
+    if (mode == COLOR_MONO)  return color_mono(t);
+    if (mode == COLOR_THERM) return color_thermal(t);
+    return color_hypsometric(t);
+}
+
+// ---------------------------------------------------------------------------
+// Pixel / line rendering
+// ---------------------------------------------------------------------------
+
 void put_pixel(t_data *data, int x, int y, int color)
 {
     if (x < 0 || x >= WIN_W || y < 0 || y >= WIN_H)
@@ -73,16 +104,16 @@ void put_pixel(t_data *data, int x, int y, int color)
     data->addr[i + 2] = (color >> 16) & 0xFF;
 }
 
-// Project a 3D point to screen and draw it with a height-based color
-void put_pixel_iso(t_data *data, int x, int y, int z)
+// Project a 3D vertex and draw it — color from raw z, projection from scaled z
+void put_pixel_iso(t_data *data, int x, int y, int raw_z)
 {
-    int color = height_to_color(z, data->map->z_min, data->map->z_max);
-    int iso_x = make_iso_x(x, y, z, data) + data->mvt.width_translation;
-    int iso_y = make_iso_y(x, y, z, data) + data->mvt.height_translation;
+    int color  = height_to_color(raw_z, data->map->z_min, data->map->z_max, data->mvt.color_mode);
+    int proj_z = (int)(raw_z * data->mvt.z_scale);
+    int iso_x  = make_iso_x(x, y, proj_z, data) + data->mvt.width_translation;
+    int iso_y  = make_iso_y(x, y, proj_z, data) + data->mvt.height_translation;
     put_pixel(data, iso_x, iso_y, color);
 }
 
-// Draw a line from (start.x, start.y) to (x1, y1) with interpolated color
 void draw_line(t_data *data, t_coords2d start, int x1, int y1, int c0, int c1)
 {
     t_line line;

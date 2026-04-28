@@ -42,7 +42,10 @@
 // Mouse drag sensitivity
 #define MOUSE_ROT_SENS  0.007f
 
-// Hypsometric color palette is defined in put_pixel.c (multi-stop gradient)
+// Color modes
+#define COLOR_HYPS  0   // hypsometric (geographic gradient)
+#define COLOR_MONO  1   // greyscale
+#define COLOR_THERM 2   // thermal (cold → hot)
 
 // Camera / view parameters
 typedef struct s_mvt {
@@ -52,7 +55,10 @@ typedef struct s_mvt {
     float   angle_x;
     float   angle_y;
     float   angle_z;
-    float   iso_angle;   // isometric projection angle (runtime-adjustable)
+    float   iso_angle;   // isometric projection angle (runtime)
+    float   z_scale;     // height exaggeration factor
+    int     lod;         // level-of-detail step (1=full, 2=half …)
+    int     color_mode;  // COLOR_HYPS / COLOR_MONO / COLOR_THERM
 } t_mvt;
 
 // Mouse drag state
@@ -108,15 +114,15 @@ void         ft_fdf(t_data *data);
 void         new_img(t_data *data);
 
 // put_pixel.c
-int          height_to_color(int z, int z_min, int z_max);
+int          height_to_color(int z, int z_min, int z_max, int mode);
 void         put_pixel(t_data *data, int x, int y, int color);
-void         put_pixel_iso(t_data *data, int x, int y, int z);
+void         put_pixel_iso(t_data *data, int x, int y, int raw_z);
 void         draw_line(t_data *data, t_coords2d start, int x1, int y1, int c0, int c1);
 
 // coordonates_calculator.c
 int          make_iso_x(int x, int y, int z, t_data *data);
 int          make_iso_y(int x, int y, int z, t_data *data);
-void         make_connections(t_data *data, int x, int y);
+void         make_connections(t_data *data, int col, int row);
 
 // panel.c
 void         draw_panel(t_data *data);

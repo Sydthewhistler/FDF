@@ -2,8 +2,10 @@
 
 static void create_img(t_data *data)
 {
-    for (int row = 0; row < data->map->height; row++) {
-        for (int col = 0; col < data->map->width; col++) {
+    int lod = data->mvt.lod;
+
+    for (int row = 0; row < data->map->height; row += lod) {
+        for (int col = 0; col < data->map->width; col += lod) {
             int wx = col * data->mvt.connection_distance;
             int wy = row * data->mvt.connection_distance;
             put_pixel_iso(data, wx, wy, data->map->coords[row][col]);
@@ -17,20 +19,23 @@ void new_img(t_data *data)
     data->img  = mlx_new_image(data->mlx, WIN_W, WIN_H);
     data->addr = mlx_get_data_addr(data->img, &data->bpp, &data->line_len, &data->endian);
     create_img(data);
-    draw_panel(data);                                          // panel bg over image buffer
+    draw_panel(data);
     mlx_put_image_to_window(data->mlx, data->win, data->img, 0, 0);
-    draw_panel_text(data);                                     // text on top of window
+    draw_panel_text(data);
 }
 
 void ft_fdf(t_data *data)
 {
-    data->mvt.height_translation  = 200;
-    data->mvt.width_translation   = 900;
+    data->mvt.angle_x             = 0.0f;
+    data->mvt.angle_y             = 0.0f;
+    data->mvt.angle_z             = 0.0f;
+    data->mvt.iso_angle           = 0.6236f;
+    data->mvt.z_scale             = 1.0f;
+    data->mvt.lod                 = 1;
+    data->mvt.color_mode          = COLOR_HYPS;
     data->mvt.connection_distance = 30;
-    data->mvt.angle_x   = 0.0f;
-    data->mvt.angle_y   = 0.0f;
-    data->mvt.angle_z   = 0.0f;
-    data->mvt.iso_angle = 0.6236f;   // default: ~35.7° (0.523599 + 0.1)
+    data->mvt.width_translation   = 900;
+    data->mvt.height_translation  = 200;
 
     data->mouse.button = 0;
     data->mouse.last_x = 0;
@@ -41,10 +46,10 @@ void ft_fdf(t_data *data)
     new_img(data);
 
     mlx_key_hook(data->win, key_hook, data);
-    mlx_hook(data->win, 4, 1L << 2, mouse_press,   data);
-    mlx_hook(data->win, 5, 1L << 3, mouse_release, data);
-    mlx_hook(data->win, 6, 1L << 6, mouse_move,    data);
-    mlx_hook(data->win, 17, 0,      event_hook,    data);
+    mlx_hook(data->win, 4,  1L << 2, mouse_press,   data);
+    mlx_hook(data->win, 5,  1L << 3, mouse_release, data);
+    mlx_hook(data->win, 6,  1L << 6, mouse_move,    data);
+    mlx_hook(data->win, 17, 0,       event_hook,    data);
 
     mlx_loop(data->mlx);
 }
