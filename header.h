@@ -32,10 +32,7 @@
 #define KEY_D       100
 #define KEY_E       101
 
-// Height-based color gradient: blue (valleys) → green (ground) → red (peaks)
-#define COLOR_LOW   0x0055FF
-#define COLOR_MID   0x00FF88
-#define COLOR_HIGH  0xFF3300
+// Hypsometric color palette is defined in put_pixel.c (multi-stop gradient)
 
 // Camera / view parameters
 typedef struct s_mvt {

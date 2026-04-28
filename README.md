@@ -29,7 +29,7 @@ The renderer is built on top of **MinilibX**, a minimal X11 graphics library, an
 ## Features
 
 - Isometric 3D projection with configurable angle
-- Height-based color gradient: blue (valleys) → green (ground) → red (peaks), interpolated along every edge
+- Hypsometric color palette (geographic elevation tint): deep water → coast → plains → forest → uplands → rocky terrain → snow caps, smoothly interpolated along every edge
 - Real-time keyboard-driven rotation on all three axes (X, Y, Z)
 - Translation and zoom controls
 - Bresenham-style line drawing connecting adjacent vertices
