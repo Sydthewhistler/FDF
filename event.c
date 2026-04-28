@@ -2,10 +2,10 @@
 
 static void apply_move(int key, t_data *data)
 {
-    if (key == KEY_DOWN)  data->mvt.height_translation += 40;
-    if (key == KEY_UP)    data->mvt.height_translation -= 40;
-    if (key == KEY_LEFT)  data->mvt.width_translation  -= 40;
-    if (key == KEY_RIGHT) data->mvt.width_translation  += 40;
+    if (key == KEY_DOWN)  data->mvt.height_translation -= 40;
+    if (key == KEY_UP)    data->mvt.height_translation += 40;
+    if (key == KEY_LEFT)  data->mvt.width_translation  += 40;
+    if (key == KEY_RIGHT) data->mvt.width_translation  -= 40;
     if (key == KEY_Z)     data->mvt.connection_distance += 5;
     if (key == KEY_X)     data->mvt.connection_distance -= 5;
     if (key == KEY_A)     data->mvt.angle_x += 0.1f;
