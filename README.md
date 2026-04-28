@@ -30,7 +30,7 @@ All rendering is done through direct pixel-buffer writes into a MinilibX image, 
 
 ---
 
-## Screenshots
+## Examples
 
 <p align="center">
   <img src="assets/screenshot_geo.png" width="49%" alt="Procedurally generated island — hypsometric palette"/>
