@@ -8,7 +8,7 @@
 #define COL_SEC         0x7070A0
 #define COL_TITLE       0x6080FF
 #define COL_BTN         0x1A2040
-#define COL_BTN_ON      0x2A4888   // active / selected button
+#define COL_BTN_ON      0x2A4888
 #define COL_BTN_EDGE    0x3040A0
 #define COL_TEXT        0xCCCCEE
 #define COL_VALUE       0xFFCC44
@@ -16,70 +16,63 @@
 #define COL_DIV2        0x333366
 
 // ---------------------------------------------------------------------------
-// Button X layout (shared by all +/- pairs and full-width buttons)
+// Button X layout
 // ---------------------------------------------------------------------------
-#define BX_L1   12     // left button: left edge
-#define BX_L2   56     // left button: right edge
-#define BX_R1   132    // right button: left edge
-#define BX_R2   176    // right button: right edge
-#define BX_F1   12     // full-width: left edge
-#define BX_F2   176    // full-width: right edge
+#define BX_L1   12
+#define BX_L2   56
+#define BX_R1   132
+#define BX_R2   176
+#define BX_F1   12
+#define BX_F2   176
 
 // ---------------------------------------------------------------------------
-// Section Y positions  (each section: divider → title → controls)
+// Section Y positions
 // ---------------------------------------------------------------------------
-
-// Relief: ISO angle
-#define Y_DIV0      32
-#define Y_S0_LBL    42
-#define Y_ISO_LBL   57
-#define Y_ISO_Y1    72
-#define Y_ISO_Y2    96
 
 // Z Scale
-#define Y_DIV1      108
-#define Y_S1_LBL    118
-#define Y_ZSC_Y1    133
-#define Y_ZSC_Y2    157
+#define Y_DIV0      32
+#define Y_S0_LBL    42
+#define Y_ZSC_Y1    57
+#define Y_ZSC_Y2    81
 
 // Color mode
-#define Y_DIV2      169
-#define Y_S2_LBL    179
-#define Y_CHYP_Y1   194
-#define Y_CHYP_Y2   214
-#define Y_CMNO_Y1   220
-#define Y_CMNO_Y2   240
-#define Y_CTHR_Y1   246
-#define Y_CTHR_Y2   266
+#define Y_DIV1      93
+#define Y_S1_LBL    103
+#define Y_CHYP_Y1   118
+#define Y_CHYP_Y2   138
+#define Y_CMNO_Y1   144
+#define Y_CMNO_Y2   164
+#define Y_CTHR_Y1   170
+#define Y_CTHR_Y2   190
 
 // Density (LOD)
-#define Y_DIV3      278
-#define Y_S3_LBL    288
-#define Y_LOD_Y1    303
-#define Y_LOD_Y2    327
+#define Y_DIV2      202
+#define Y_S2_LBL    212
+#define Y_LOD_Y1    227
+#define Y_LOD_Y2    251
 
 // Zoom
-#define Y_DIV4      339
-#define Y_S4_LBL    349
-#define Y_ZOM_Y1    364
-#define Y_ZOM_Y2    388
+#define Y_DIV3      263
+#define Y_S3_LBL    273
+#define Y_ZOM_Y1    288
+#define Y_ZOM_Y2    312
 
 // View controls
-#define Y_DIV5      400
-#define Y_S5_LBL    410
-#define Y_RST_Y1    425
-#define Y_RST_Y2    447
-#define Y_CTR_Y1    453
-#define Y_CTR_Y2    475
+#define Y_DIV4      324
+#define Y_S4_LBL    334
+#define Y_RST_Y1    349
+#define Y_RST_Y2    371
+#define Y_CTR_Y1    377
+#define Y_CTR_Y2    399
 
 // Map info
-#define Y_DIV6      487
-#define Y_S6_LBL    497
-#define Y_INFO_MAP  512
-#define Y_INFO_Z    527
-#define Y_INFO_AX   542
-#define Y_INFO_AY   557
-#define Y_INFO_AZ   572
+#define Y_DIV5      411
+#define Y_S5_LBL    421
+#define Y_INFO_MAP  436
+#define Y_INFO_Z    451
+#define Y_INFO_AX   466
+#define Y_INFO_AY   481
+#define Y_INFO_AZ   496
 
 // ---------------------------------------------------------------------------
 // Drawing helpers
@@ -119,31 +112,24 @@ static void draw_divider(t_data *data, int y)
 // ---------------------------------------------------------------------------
 void draw_panel(t_data *data)
 {
-    // Background + right border
     draw_rect(data, 0, 0, PANEL_W - 2, WIN_H - 1, COL_BG);
     for (int y = 0; y < WIN_H; y++) {
         put_pixel(data, PANEL_W - 2, y, COL_BORDER);
         put_pixel(data, PANEL_W - 1, y, 0x070710);
     }
 
-    // Dividers
     draw_divider(data, Y_DIV0);
     draw_divider(data, Y_DIV1);
     draw_divider(data, Y_DIV2);
     draw_divider(data, Y_DIV3);
     draw_divider(data, Y_DIV4);
     draw_divider(data, Y_DIV5);
-    draw_divider(data, Y_DIV6);
-
-    // ISO angle buttons
-    draw_button(data, BX_L1, Y_ISO_Y1, BX_L2, Y_ISO_Y2, 0);
-    draw_button(data, BX_R1, Y_ISO_Y1, BX_R2, Y_ISO_Y2, 0);
 
     // Z scale buttons
     draw_button(data, BX_L1, Y_ZSC_Y1, BX_L2, Y_ZSC_Y2, 0);
     draw_button(data, BX_R1, Y_ZSC_Y1, BX_R2, Y_ZSC_Y2, 0);
 
-    // Color mode buttons (full width, highlight active)
+    // Color mode buttons (highlight active)
     draw_button(data, BX_F1, Y_CHYP_Y1, BX_F2, Y_CHYP_Y2, data->mvt.color_mode == COLOR_HYPS);
     draw_button(data, BX_F1, Y_CMNO_Y1, BX_F2, Y_CMNO_Y2, data->mvt.color_mode == COLOR_MONO);
     draw_button(data, BX_F1, Y_CTHR_Y1, BX_F2, Y_CTHR_Y2, data->mvt.color_mode == COLOR_THERM);
@@ -156,62 +142,54 @@ void draw_panel(t_data *data)
     draw_button(data, BX_L1, Y_ZOM_Y1, BX_L2, Y_ZOM_Y2, 0);
     draw_button(data, BX_R1, Y_ZOM_Y1, BX_R2, Y_ZOM_Y2, 0);
 
-    // Reset / Center buttons (full width)
+    // Reset / Center buttons
     draw_button(data, BX_F1, Y_RST_Y1, BX_F2, Y_RST_Y2, 0);
     draw_button(data, BX_F1, Y_CTR_Y1, BX_F2, Y_CTR_Y2, 0);
 }
 
 // ---------------------------------------------------------------------------
-// draw_panel_text — after mlx_put_image_to_window (text on top of window)
+// draw_panel_text — after blit
 // ---------------------------------------------------------------------------
 void draw_panel_text(t_data *data)
 {
     char buf[32];
 
-    mlx_string_put(data->mlx, data->win, 38,  16, COL_TITLE, "FDF Controls");
+    mlx_string_put(data->mlx, data->win, 38, 16, COL_TITLE, "FDF Controls");
 
-    // --- Relief ---
-    mlx_string_put(data->mlx, data->win, 10, Y_S0_LBL,  COL_SEC,  "RELIEF");
-    mlx_string_put(data->mlx, data->win, 10, Y_ISO_LBL, COL_TEXT, "ISO angle");
-    mlx_string_put(data->mlx, data->win, 22, Y_ISO_Y1 + 12, COL_TEXT, "-");
-    snprintf(buf, sizeof(buf), "%.2f", data->mvt.iso_angle);
-    mlx_string_put(data->mlx, data->win, 68, Y_ISO_Y1 + 12, COL_VALUE, buf);
-    mlx_string_put(data->mlx, data->win, 148, Y_ISO_Y1 + 12, COL_TEXT, "+");
-
-    // --- Z Scale ---
-    mlx_string_put(data->mlx, data->win, 10, Y_S1_LBL,  COL_SEC,  "Z SCALE");
-    mlx_string_put(data->mlx, data->win, 22, Y_ZSC_Y1 + 12, COL_TEXT, "-");
+    // Z Scale
+    mlx_string_put(data->mlx, data->win, 10, Y_S0_LBL, COL_SEC, "Z SCALE");
+    mlx_string_put(data->mlx, data->win, 22,  Y_ZSC_Y1 + 11, COL_TEXT, "-");
     snprintf(buf, sizeof(buf), "x%.2f", data->mvt.z_scale);
-    mlx_string_put(data->mlx, data->win, 60, Y_ZSC_Y1 + 12, COL_VALUE, buf);
-    mlx_string_put(data->mlx, data->win, 148, Y_ZSC_Y1 + 12, COL_TEXT, "+");
+    mlx_string_put(data->mlx, data->win, 60,  Y_ZSC_Y1 + 11, COL_VALUE, buf);
+    mlx_string_put(data->mlx, data->win, 148, Y_ZSC_Y1 + 11, COL_TEXT, "+");
 
-    // --- Color mode ---
-    mlx_string_put(data->mlx, data->win, 10, Y_S2_LBL,  COL_SEC,  "COLOR MODE");
-    mlx_string_put(data->mlx, data->win, 40, Y_CHYP_Y1 + 12, COL_TEXT, "Hypsometric");
-    mlx_string_put(data->mlx, data->win, 50, Y_CMNO_Y1 + 12, COL_TEXT, "Monochrome");
-    mlx_string_put(data->mlx, data->win, 62, Y_CTHR_Y1 + 12, COL_TEXT, "Thermal");
+    // Color mode
+    mlx_string_put(data->mlx, data->win, 10, Y_S1_LBL, COL_SEC, "COLOR MODE");
+    mlx_string_put(data->mlx, data->win, 40, Y_CHYP_Y1 + 11, COL_TEXT, "Hypsometric");
+    mlx_string_put(data->mlx, data->win, 50, Y_CMNO_Y1 + 11, COL_TEXT, "Monochrome");
+    mlx_string_put(data->mlx, data->win, 62, Y_CTHR_Y1 + 11, COL_TEXT, "Thermal");
 
-    // --- Density ---
-    mlx_string_put(data->mlx, data->win, 10, Y_S3_LBL,  COL_SEC,  "DENSITY");
-    mlx_string_put(data->mlx, data->win, 22, Y_LOD_Y1 + 12, COL_TEXT, "-");
+    // Density
+    mlx_string_put(data->mlx, data->win, 10, Y_S2_LBL, COL_SEC, "DENSITY");
+    mlx_string_put(data->mlx, data->win, 22,  Y_LOD_Y1 + 11, COL_TEXT, "-");
     snprintf(buf, sizeof(buf), "1/%d", data->mvt.lod);
-    mlx_string_put(data->mlx, data->win, 72, Y_LOD_Y1 + 12, COL_VALUE, buf);
-    mlx_string_put(data->mlx, data->win, 148, Y_LOD_Y1 + 12, COL_TEXT, "+");
+    mlx_string_put(data->mlx, data->win, 72,  Y_LOD_Y1 + 11, COL_VALUE, buf);
+    mlx_string_put(data->mlx, data->win, 148, Y_LOD_Y1 + 11, COL_TEXT, "+");
 
-    // --- Zoom ---
-    mlx_string_put(data->mlx, data->win, 10, Y_S4_LBL,  COL_SEC,  "ZOOM");
-    mlx_string_put(data->mlx, data->win, 22, Y_ZOM_Y1 + 12, COL_TEXT, "-");
+    // Zoom
+    mlx_string_put(data->mlx, data->win, 10, Y_S3_LBL, COL_SEC, "ZOOM");
+    mlx_string_put(data->mlx, data->win, 22,  Y_ZOM_Y1 + 11, COL_TEXT, "-");
     snprintf(buf, sizeof(buf), "%d", data->mvt.connection_distance);
-    mlx_string_put(data->mlx, data->win, 68, Y_ZOM_Y1 + 12, COL_VALUE, buf);
-    mlx_string_put(data->mlx, data->win, 148, Y_ZOM_Y1 + 12, COL_TEXT, "+");
+    mlx_string_put(data->mlx, data->win, 68,  Y_ZOM_Y1 + 11, COL_VALUE, buf);
+    mlx_string_put(data->mlx, data->win, 148, Y_ZOM_Y1 + 11, COL_TEXT, "+");
 
-    // --- View ---
-    mlx_string_put(data->mlx, data->win, 10, Y_S5_LBL, COL_SEC,  "VIEW");
-    mlx_string_put(data->mlx, data->win, 55, Y_RST_Y1 + 12, COL_TEXT, "Reset");
-    mlx_string_put(data->mlx, data->win, 50, Y_CTR_Y1 + 12, COL_TEXT, "Center");
+    // View
+    mlx_string_put(data->mlx, data->win, 10, Y_S4_LBL, COL_SEC, "VIEW");
+    mlx_string_put(data->mlx, data->win, 55, Y_RST_Y1 + 11, COL_TEXT, "Reset");
+    mlx_string_put(data->mlx, data->win, 50, Y_CTR_Y1 + 11, COL_TEXT, "Center");
 
-    // --- Map info ---
-    mlx_string_put(data->mlx, data->win, 10, Y_S6_LBL, COL_SEC, "MAP INFO");
+    // Map info
+    mlx_string_put(data->mlx, data->win, 10, Y_S5_LBL, COL_SEC, "MAP INFO");
     snprintf(buf, sizeof(buf), "%d x %d", data->map->width, data->map->height);
     mlx_string_put(data->mlx, data->win, 10, Y_INFO_MAP, COL_TEXT, buf);
     snprintf(buf, sizeof(buf), "Z %d / %d", data->map->z_min, data->map->z_max);
@@ -225,15 +203,14 @@ void draw_panel_text(t_data *data)
 }
 
 // ---------------------------------------------------------------------------
-// Auto-center: set translation so map center lands at screen center
+// Auto-center / Reset
 // ---------------------------------------------------------------------------
 static void auto_center(t_data *data)
 {
-    int dist    = data->mvt.connection_distance;
+    int dist   = data->mvt.connection_distance;
     int mid_col = data->map->width  / 2;
     int mid_row = data->map->height / 2;
-    int raw_z   = data->map->coords[mid_row][mid_col];
-    int proj_z  = (int)(raw_z * data->mvt.z_scale);
+    int proj_z  = (int)(data->map->coords[mid_row][mid_col] * data->mvt.z_scale);
 
     data->mvt.width_translation  = 0;
     data->mvt.height_translation = 0;
@@ -245,9 +222,6 @@ static void auto_center(t_data *data)
     data->mvt.height_translation = WIN_H / 2 - cy;
 }
 
-// ---------------------------------------------------------------------------
-// Reset: restore all view parameters to defaults, then center
-// ---------------------------------------------------------------------------
 static void reset_view(t_data *data)
 {
     data->mvt.angle_x             = 0.0f;
@@ -261,7 +235,7 @@ static void reset_view(t_data *data)
 }
 
 // ---------------------------------------------------------------------------
-// panel_click — returns 1 if a button was hit (event consumed)
+// panel_click
 // ---------------------------------------------------------------------------
 static int in_btn(int x, int y, int x1, int y1, int x2, int y2)
 {
@@ -272,18 +246,6 @@ int panel_click(int x, int y, t_data *data)
 {
     if (x >= PANEL_W)
         return 0;
-
-    // ISO angle
-    if (in_btn(x, y, BX_L1, Y_ISO_Y1, BX_L2, Y_ISO_Y2)) {
-        data->mvt.iso_angle -= 0.05f;
-        if (data->mvt.iso_angle < 0.05f) data->mvt.iso_angle = 0.05f;
-        return 1;
-    }
-    if (in_btn(x, y, BX_R1, Y_ISO_Y1, BX_R2, Y_ISO_Y2)) {
-        data->mvt.iso_angle += 0.05f;
-        if (data->mvt.iso_angle > 1.55f) data->mvt.iso_angle = 1.55f;
-        return 1;
-    }
 
     // Z scale
     if (in_btn(x, y, BX_L1, Y_ZSC_Y1, BX_L2, Y_ZSC_Y2)) {
@@ -308,7 +270,7 @@ int panel_click(int x, int y, t_data *data)
         data->mvt.color_mode = COLOR_THERM; return 1;
     }
 
-    // LOD (density)
+    // LOD
     if (in_btn(x, y, BX_L1, Y_LOD_Y1, BX_L2, Y_LOD_Y2)) {
         if (data->mvt.lod > 1) data->mvt.lod--;
         return 1;
@@ -333,14 +295,13 @@ int panel_click(int x, int y, t_data *data)
         return 1;
     }
 
-    // Reset
+    // Reset / Center
     if (in_btn(x, y, BX_F1, Y_RST_Y1, BX_F2, Y_RST_Y2)) {
-        reset_view(data); return 1;
+        reset_view(data);  return 1;
     }
-    // Center
     if (in_btn(x, y, BX_F1, Y_CTR_Y1, BX_F2, Y_CTR_Y2)) {
         auto_center(data); return 1;
     }
 
-    return 1; // absorb click anywhere in panel
+    return 1;
 }
