@@ -170,9 +170,19 @@ make superclean
 
 ## Controls
 
+### Mouse
+
+| Input                  | Action                              |
+|------------------------|-------------------------------------|
+| Left drag              | Rotate (X axis = tilt, Z axis = spin) |
+| Right drag             | Pan                                 |
+| Scroll up / down       | Zoom in / out (adaptive speed)      |
+
+### Keyboard
+
 | Key              | Action                          |
 |------------------|---------------------------------|
-| `Arrow keys`     | Translate view (pan)            |
+| `Arrow keys`     | Pan                             |
 | `Z` / `X`        | Zoom in / Zoom out              |
 | `A` / `Q`        | Rotate around X axis            |
 | `S` / `W`        | Rotate around Y axis            |

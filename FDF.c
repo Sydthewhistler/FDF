@@ -29,10 +29,24 @@ void ft_fdf(t_data *data)
     data->mvt.angle_y = 0.0f;
     data->mvt.angle_z = 0.0f;
 
+    data->mouse.button = 0;
+    data->mouse.last_x = 0;
+    data->mouse.last_y = 0;
+
     data->mlx = mlx_init();
     data->win = mlx_new_window(data->mlx, WIN_W, WIN_H, "FDF");
     new_img(data);
+
+    // Keyboard
     mlx_key_hook(data->win, key_hook, data);
+
+    // Mouse: press, release, motion
+    mlx_hook(data->win, 4, 1L << 2, mouse_press,   data);
+    mlx_hook(data->win, 5, 1L << 3, mouse_release, data);
+    mlx_hook(data->win, 6, 1L << 6, mouse_move,    data);
+
+    // Window close button
     mlx_hook(data->win, 17, 0, event_hook, data);
+
     mlx_loop(data->mlx);
 }

@@ -32,6 +32,16 @@
 #define KEY_D       100
 #define KEY_E       101
 
+// Mouse button codes (X11)
+#define MOUSE_LEFT      1
+#define MOUSE_MIDDLE    2
+#define MOUSE_RIGHT     3
+#define MOUSE_SCROLL_UP 4
+#define MOUSE_SCROLL_DN 5
+
+// Mouse drag sensitivity
+#define MOUSE_ROT_SENS  0.007f   // radians per pixel (rotation)
+
 // Hypsometric color palette is defined in put_pixel.c (multi-stop gradient)
 
 // Camera / view parameters
@@ -44,6 +54,13 @@ typedef struct s_mvt {
     float   angle_z;
 } t_mvt;
 
+// Mouse drag state
+typedef struct s_mouse {
+    int button;   // held button (0 = none)
+    int last_x;
+    int last_y;
+} t_mouse;
+
 // Height map data
 typedef struct s_map {
     int   **coords;
@@ -55,15 +72,16 @@ typedef struct s_map {
 
 // Main application state
 typedef struct s_data {
-    void   *mlx;
-    void   *win;
-    void   *img;
-    char   *addr;
-    int     bpp;
-    int     line_len;
-    int     endian;
-    t_mvt   mvt;
-    t_map  *map;
+    void    *mlx;
+    void    *win;
+    void    *img;
+    char    *addr;
+    int      bpp;
+    int      line_len;
+    int      endian;
+    t_mvt    mvt;
+    t_mouse  mouse;
+    t_map   *map;
 } t_data;
 
 // Line drawing helper
@@ -106,5 +124,8 @@ void         ft_free_int(t_map *map);
 // event.c
 int          event_hook(t_data *data);
 int          key_hook(int key, t_data *data);
+int          mouse_press(int button, int x, int y, t_data *data);
+int          mouse_release(int button, int x, int y, t_data *data);
+int          mouse_move(int x, int y, t_data *data);
 
 #endif
