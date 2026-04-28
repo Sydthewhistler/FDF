@@ -1,9 +1,5 @@
 #include "header.h"
 
-// ---------------------------------------------------------------------------
-// Color utilities
-// ---------------------------------------------------------------------------
-
 static int lerp_color(int c0, int c1, float t)
 {
     int r = (int)(((c0 >> 16) & 0xFF) + (((c1 >> 16) & 0xFF) - ((c0 >> 16) & 0xFF)) * t);
@@ -12,9 +8,7 @@ static int lerp_color(int c0, int c1, float t)
     return (r << 16) | (g << 8) | b;
 }
 
-// ---------------------------------------------------------------------------
-// Hypsometric palette — 11-stop geographic tint
-// ---------------------------------------------------------------------------
+// 11-stop hypsometric tint: deep water → coast → plains → forest → highland → snow
 typedef struct { float t; int color; } t_stop;
 
 static const t_stop HYPS[] = {
@@ -45,18 +39,12 @@ static int color_hypsometric(float t)
     return HYPS[N_HYPS - 1].color;
 }
 
-// ---------------------------------------------------------------------------
-// Monochrome — dark grey to white
-// ---------------------------------------------------------------------------
 static int color_mono(float t)
 {
     int v = 55 + (int)(t * 200);
     return (v << 16) | (v << 8) | v;
 }
 
-// ---------------------------------------------------------------------------
-// Thermal — cold blue → cyan → green → yellow → red
-// ---------------------------------------------------------------------------
 static const t_stop THERM[] = {
     { 0.00f, 0x0022CC },
     { 0.25f, 0x00CCFF },
@@ -79,9 +67,6 @@ static int color_thermal(float t)
     return THERM[N_THERM - 1].color;
 }
 
-// ---------------------------------------------------------------------------
-// Public: map a raw Z value to a color
-// ---------------------------------------------------------------------------
 int height_to_color(int z, int z_min, int z_max, int mode)
 {
     float t = (float)(z - z_min) / (float)(z_max - z_min);
@@ -89,10 +74,6 @@ int height_to_color(int z, int z_min, int z_max, int mode)
     if (mode == COLOR_THERM) return color_thermal(t);
     return color_hypsometric(t);
 }
-
-// ---------------------------------------------------------------------------
-// Pixel / line rendering
-// ---------------------------------------------------------------------------
 
 void put_pixel(t_data *data, int x, int y, int color)
 {
@@ -104,7 +85,7 @@ void put_pixel(t_data *data, int x, int y, int color)
     data->addr[i + 2] = (color >> 16) & 0xFF;
 }
 
-// Project a 3D vertex and draw it — color from raw z, projection from scaled z
+// raw_z drives the color; proj_z (z_scale applied) drives the geometry
 void put_pixel_iso(t_data *data, int x, int y, int raw_z)
 {
     int color  = height_to_color(raw_z, data->map->z_min, data->map->z_max, data->mvt.color_mode);

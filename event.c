@@ -1,9 +1,5 @@
 #include "header.h"
 
-// ---------------------------------------------------------------------------
-// Keyboard
-// ---------------------------------------------------------------------------
-
 static void apply_move(int key, t_data *data)
 {
     if (key == KEY_DOWN)  data->mvt.height_translation -= 40;
@@ -45,10 +41,6 @@ int key_hook(int key, t_data *data)
     return 0;
 }
 
-// ---------------------------------------------------------------------------
-// Mouse
-// ---------------------------------------------------------------------------
-
 static void redraw(t_data *data)
 {
     mlx_destroy_image(data->mlx, data->img);
@@ -57,14 +49,12 @@ static void redraw(t_data *data)
 
 int mouse_press(int button, int x, int y, t_data *data)
 {
-    // Panel buttons (left click only — absorbs the event entirely)
     if (button == MOUSE_LEFT && x < PANEL_W) {
         if (panel_click(x, y, data))
             redraw(data);
         return 0;
     }
 
-    // Scroll wheel: adaptive zoom
     if (button == MOUSE_SCROLL_UP || button == MOUSE_SCROLL_DN) {
         int step = data->mvt.connection_distance / 10;
         if (step < 1) step = 1;
@@ -78,7 +68,6 @@ int mouse_press(int button, int x, int y, t_data *data)
         return 0;
     }
 
-    // Start drag (left = rotate, right = pan) — only outside the panel
     if ((button == MOUSE_LEFT || button == MOUSE_RIGHT) && x >= PANEL_W) {
         data->mouse.button = button;
         data->mouse.last_x = x;
@@ -120,10 +109,6 @@ int mouse_move(int x, int y, t_data *data)
     redraw(data);
     return 0;
 }
-
-// ---------------------------------------------------------------------------
-// Window close
-// ---------------------------------------------------------------------------
 
 int event_hook(t_data *data)
 {

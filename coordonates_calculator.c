@@ -26,7 +26,7 @@ int make_iso_y(int x, int y, int z, t_data *data)
     return (int)((r.rx + r.ry) * sin(data->mvt.iso_angle) - r.rz);
 }
 
-// Screen position of vertex (col, row) — z_scale applied for projection
+// z_scale applied here, not at call sites
 static t_coords2d screen_pos(t_data *data, int col, int row)
 {
     int        dist   = data->mvt.connection_distance;
@@ -39,7 +39,6 @@ static t_coords2d screen_pos(t_data *data, int col, int row)
     return p;
 }
 
-// Draw edges to left and top neighbours, respecting LOD step and color mode
 void make_connections(t_data *data, int col, int row)
 {
     int        lod       = data->mvt.lod;
