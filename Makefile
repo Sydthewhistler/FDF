@@ -7,7 +7,7 @@ SRCS    = main.c FDF.c import_map.c put_pixel.c coordonates_calculator.c event.c
 OBJS    = $(SRCS:.c=.o)
 LIBS    = libft/libft.a minilibx-linux/libmlx.a
 
-.PHONY: all clean fclean re start download superclean debug
+.PHONY: all clean fclean re start superclean debug
 
 all: $(NAME)
 
@@ -17,21 +17,9 @@ $(NAME): $(OBJS) $(LIBS)
 %.o: %.c header.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
-# Build with debug symbols and AddressSanitizer
-debug: CFLAGS  += -g3 -fsanitize=address
-debug: LDFLAGS += -fsanitize=address
-debug: re
-
-# Download and build dependencies (MinilibX + sample maps)
-start: download
+start:
 	cd libft && make && make clean
-
-download:
-	wget https://cdn.intra.42.fr/document/document/26936/minilibx-linux.tgz
-	tar -xf minilibx-linux.tgz && rm -f minilibx-linux.tgz
 	cd minilibx-linux && make
-	wget https://cdn.intra.42.fr/document/document/26933/maps.zip
-	unzip maps.zip && rm -f maps.zip
 	rm -rf __MACOSX
 
 clean:
@@ -39,9 +27,7 @@ clean:
 
 fclean: clean
 	rm -f $(NAME)
-
-# Remove all generated files including libraries and downloaded assets
-superclean: fclean
-	rm -rf minilibx-linux maps libft/libft.a
+	cd libft && make fclean
+	cd minilibx-linux && make clean
 
 re: fclean all
